@@ -1,10 +1,23 @@
-
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, XCircle, AlertTriangle, ArrowUpCircle, BookOpen, Briefcase, Gauge } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  ArrowUpCircle,
+  BookOpen,
+  Briefcase,
+  Gauge,
+} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
 
 export interface ResultsData {
   matched_keywords: string[];
@@ -14,12 +27,12 @@ export interface ResultsData {
   missing_sections?: string[];
   experience_match?: {
     match: boolean;
-    confidence: 'high' | 'medium' | 'low';
+    confidence: "high" | "medium" | "low";
     message: string;
   };
   education_match?: {
     match: boolean;
-    confidence: 'high' | 'medium' | 'low';
+    confidence: "high" | "medium" | "low";
     message: string;
   };
   loading?: boolean;
@@ -32,7 +45,7 @@ interface ResultsProps {
 
 const Results: React.FC<ResultsProps> = ({ data }) => {
   if (!data) return null;
-  
+
   if (data.error) {
     return (
       <Card className="border-destructive/30 bg-destructive/5 animate-fade-in">
@@ -64,7 +77,10 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="h-6 w-20 bg-muted rounded animate-pulse-slow"></div>
+                  <div
+                    key={i}
+                    className="h-6 w-20 bg-muted rounded animate-pulse-slow"
+                  ></div>
                 ))}
               </div>
             </div>
@@ -79,7 +95,10 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-6 w-24 bg-muted rounded animate-pulse-slow"></div>
+                  <div
+                    key={i}
+                    className="h-6 w-24 bg-muted rounded animate-pulse-slow"
+                  ></div>
                 ))}
               </div>
             </div>
@@ -91,29 +110,29 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
 
   // Helper function to get color based on score
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-success';
-    if (score >= 60) return 'text-warning';
-    return 'text-destructive';
+    if (score >= 80) return "text-success";
+    if (score >= 60) return "text-warning";
+    return "text-destructive";
   };
 
   // Helper function to get progress bar color based on score
   const getProgressColor = (score: number) => {
-    if (score >= 80) return 'bg-success';
-    if (score >= 60) return 'bg-warning';
-    return 'bg-destructive';
+    if (score >= 80) return "bg-success";
+    if (score >= 60) return "bg-warning";
+    return "bg-destructive";
   };
 
   // Helper function to get badge color based on match status
   const getMatchBadgeColor = (match: boolean) => {
-    return match 
-      ? "bg-success/20 text-success-foreground border-success/40 hover:bg-success/30" 
+    return match
+      ? "bg-success/20 text-success-foreground border-success/40 hover:bg-success/30"
       : "bg-destructive/20 text-destructive-foreground border-destructive/40 hover:bg-destructive/30";
   };
 
   return (
     <div className="space-y-4 animate-fade-in">
       {/* Match Score Card */}
-      {typeof data.match_score !== 'undefined' && (
+      {typeof data.match_score !== "undefined" && (
         <Card className="overflow-hidden">
           <CardHeader className="bg-muted/50 pb-2">
             <CardTitle className="flex items-center">
@@ -127,24 +146,27 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-center mb-4">
               <div className="relative w-32 h-32 flex items-center justify-center rounded-full border-8 border-muted">
-                <span className={`text-4xl font-bold ${getScoreColor(data.match_score)}`}>
+                <span
+                  className={`text-4xl font-bold ${getScoreColor(
+                    data.match_score
+                  )}`}
+                >
                   {data.match_score}%
                 </span>
               </div>
             </div>
-            <Progress 
-              value={data.match_score} 
-              className="h-2 w-full mb-2" 
-              indicatorClassName={getProgressColor(data.match_score)} 
+            <Progress
+              value={data.match_score}
+              className={`h-2 w-full mb-2 ${getProgressColor(
+                data.match_score
+              )}`}
             />
             <p className="text-center text-sm mt-2 text-muted-foreground">
-              {data.match_score >= 80 ? (
-                "Excellent match! Your resume is well-aligned with this job."
-              ) : data.match_score >= 60 ? (
-                "Good match! With a few improvements, your resume could stand out more."
-              ) : (
-                "Your resume needs significant improvements to match this job better."
-              )}
+              {data.match_score >= 80
+                ? "Excellent match! Your resume is well-aligned with this job."
+                : data.match_score >= 60
+                ? "Good match! With a few improvements, your resume could stand out more."
+                : "Your resume needs significant improvements to match this job better."}
             </p>
           </CardContent>
         </Card>
@@ -163,18 +185,22 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
             </CardHeader>
             <CardContent>
               <div className="flex flex-col space-y-2">
-                <Badge 
-                  variant="outline" 
-                  className={`self-start ${getMatchBadgeColor(data.experience_match.match)}`}
+                <Badge
+                  variant="outline"
+                  className={`self-start ${getMatchBadgeColor(
+                    data.experience_match.match
+                  )}`}
                 >
-                  {data.experience_match.match ? "Meets Requirements" : "Does Not Meet Requirements"}
+                  {data.experience_match.match
+                    ? "Meets Requirements"
+                    : "Does Not Meet Requirements"}
                 </Badge>
                 <p className="text-sm mt-2">{data.experience_match.message}</p>
               </div>
             </CardContent>
           </Card>
         )}
-        
+
         {/* Education Match */}
         {data.education_match && (
           <Card>
@@ -186,11 +212,15 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
             </CardHeader>
             <CardContent>
               <div className="flex flex-col space-y-2">
-                <Badge 
-                  variant="outline" 
-                  className={`self-start ${getMatchBadgeColor(data.education_match.match)}`}
+                <Badge
+                  variant="outline"
+                  className={`self-start ${getMatchBadgeColor(
+                    data.education_match.match
+                  )}`}
                 >
-                  {data.education_match.match ? "Meets Requirements" : "Does Not Meet Requirements"}
+                  {data.education_match.match
+                    ? "Meets Requirements"
+                    : "Does Not Meet Requirements"}
                 </Badge>
                 <p className="text-sm mt-2">{data.education_match.message}</p>
               </div>
@@ -214,17 +244,19 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
           {data.matched_keywords.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {data.matched_keywords.map((keyword, index) => (
-                <Badge 
-                  key={index} 
-                  variant="outline" 
-                  className="bg-success/20 text-success-foreground border-success/40 font-medium px-3 py-1 rounded-full hover:bg-success/30 transition-colors"
+                <Badge
+                  key={index}
+                  variant="outline"
+                  className="bg-success/20 text-success-foreground border-success/40 font-medium px-3 py-1 rounded-full hover:bg-success/30 transition-colors text-black"
                 >
                   {keyword}
                 </Badge>
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">No matching keywords found. Try optimizing your resume.</p>
+            <p className="text-muted-foreground text-sm">
+              No matching keywords found. Try optimizing your resume.
+            </p>
           )}
         </CardContent>
       </Card>
@@ -244,17 +276,19 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
           {data.missing_keywords.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {data.missing_keywords.map((keyword, index) => (
-                <Badge 
-                  key={index} 
-                  variant="outline" 
-                  className="bg-warning/20 text-warning-foreground border-warning/40 font-medium px-3 py-1 rounded-full hover:bg-warning/30 transition-colors"
+                <Badge
+                  key={index}
+                  variant="outline"
+                  className="bg-warning/20 text-warning-foreground border-warning/40 font-medium px-3 py-1 rounded-full hover:bg-warning/30 transition-colors text-black"
                 >
                   {keyword}
                 </Badge>
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">Impressive! Your resume includes all important keywords.</p>
+            <p className="text-muted-foreground text-sm">
+              Impressive! Your resume includes all important keywords.
+            </p>
           )}
         </CardContent>
       </Card>
@@ -274,9 +308,9 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {data.missing_sections.map((section, index) => (
-                <Badge 
-                  key={index} 
-                  variant="outline" 
+                <Badge
+                  key={index}
+                  variant="outline"
                   className="bg-warning/20 text-warning-foreground border-warning/40 font-medium px-3 py-1 rounded-full hover:bg-warning/30 transition-colors"
                 >
                   {section}
@@ -302,8 +336,8 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
           {data.suggestions.length > 0 ? (
             <ul className="space-y-3">
               {data.suggestions.map((suggestion, index) => (
-                <li 
-                  key={index} 
+                <li
+                  key={index}
                   className="flex items-start p-3 bg-secondary/10 rounded-lg hover:bg-secondary/20 transition-colors"
                 >
                   <span className="text-primary mr-3 mt-1">•</span>
@@ -312,7 +346,10 @@ const Results: React.FC<ResultsProps> = ({ data }) => {
               ))}
             </ul>
           ) : (
-            <p className="text-muted-foreground text-sm">No specific suggestions at this time. Your resume appears well-optimized for this job!</p>
+            <p className="text-muted-foreground text-sm">
+              No specific suggestions at this time. Your resume appears
+              well-optimized for this job!
+            </p>
           )}
         </CardContent>
       </Card>
