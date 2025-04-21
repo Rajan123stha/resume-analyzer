@@ -1,21 +1,20 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+import { Sparkles, AlertCircle } from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import FileUpload from "@/components/FileUpload";
+import JobDescription from "@/components/JobDescription";
+import Results, { ResultsData } from "@/components/Results";
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Toaster } from '@/components/ui/toaster';
-import { useToast } from '@/hooks/use-toast';
-import { Sparkles, AlertCircle } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import FileUpload from '@/components/FileUpload';
-import JobDescription from '@/components/JobDescription';
-import Results, { ResultsData } from '@/components/Results';
-
-const API_URL = 'http://localhost:5000'; // Python backend URL
+const API_URL = "resume-analyser-app.azurewebsites.net"; // Python backend URL
 
 const Index = () => {
   const { toast } = useToast();
   const [resume, setResume] = useState<File | null>(null);
-  const [jobDescription, setJobDescription] = useState('');
+  const [jobDescription, setJobDescription] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<ResultsData | null>(null);
 
@@ -57,13 +56,18 @@ const Index = () => {
     if (!validateInputs()) return;
 
     setIsAnalyzing(true);
-    setResults({ matched_keywords: [], missing_keywords: [], suggestions: [], loading: true });
+    setResults({
+      matched_keywords: [],
+      missing_keywords: [],
+      suggestions: [],
+      loading: true,
+    });
 
     // Scroll to results
     setTimeout(() => {
-      const resultsElement = document.getElementById('results-section');
+      const resultsElement = document.getElementById("results-section");
       if (resultsElement) {
-        resultsElement.scrollIntoView({ behavior: 'smooth' });
+        resultsElement.scrollIntoView({ behavior: "smooth" });
       }
     }, 100);
 
@@ -71,43 +75,46 @@ const Index = () => {
       // Create form data for the API request
       const formData = new FormData();
       if (resume) {
-        formData.append('resume', resume);
+        formData.append("resume", resume);
       }
-      formData.append('jobDescription', jobDescription);
+      formData.append("jobDescription", jobDescription);
 
       // Call the Python backend API
-      const response = await fetch(`${API_URL}/analyze`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/api/analyze`, {
+        method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to analyze resume');
+        throw new Error(errorData.error || "Failed to analyze resume");
       }
 
       const data = await response.json();
-      
+
       // Set the results
       setResults({
         matched_keywords: data.matched_keywords || [],
         missing_keywords: data.missing_keywords || [],
         suggestions: data.suggestions || [],
       });
-      
+
       toast({
         title: "Analysis Complete",
         description: "Your resume has been analyzed successfully!",
       });
     } catch (error) {
-      console.error('Analysis error:', error);
+      console.error("Analysis error:", error);
       setResults({
         matched_keywords: [],
         missing_keywords: [],
         suggestions: [],
-        error: error instanceof Error ? error.message : "Failed to analyze your resume. Please try again later."
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to analyze your resume. Please try again later.",
       });
-      
+
       toast({
         title: "Analysis Failed",
         description: "There was an error analyzing your resume.",
@@ -121,7 +128,7 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 container py-8">
         <section className="max-w-4xl mx-auto mb-12">
           <div className="text-center mb-10">
@@ -129,13 +136,16 @@ const Index = () => {
               Optimize Your Resume for Job Success
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Upload your resume and job description to get instant suggestions for improving your match rate.
+              Upload your resume and job description to get instant suggestions
+              for improving your match rate.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h2 className="text-lg font-semibold mb-4">1. Upload Your Resume</h2>
+              <h2 className="text-lg font-semibold mb-4">
+                1. Upload Your Resume
+              </h2>
               <FileUpload onFileChange={handleFileChange} />
               <div className="mt-4 text-sm text-muted-foreground">
                 <div className="flex items-center">
@@ -144,16 +154,18 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            
+
             <div>
-              <h2 className="text-lg font-semibold mb-4">2. Enter Job Description</h2>
+              <h2 className="text-lg font-semibold mb-4">
+                2. Enter Job Description
+              </h2>
               <JobDescription onDescriptionChange={handleDescriptionChange} />
             </div>
           </div>
-          
+
           <div className="mt-10 text-center">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               onClick={handleAnalyze}
               disabled={isAnalyzing || !resume || !jobDescription.trim()}
               className="gap-2"
@@ -166,11 +178,13 @@ const Index = () => {
             </p>
           </div>
         </section>
-        
+
         {results && (
           <section id="results-section" className="max-w-4xl mx-auto">
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-center">Analysis Results</h2>
+              <h2 className="text-2xl font-bold text-center">
+                Analysis Results
+              </h2>
               <p className="text-center text-muted-foreground mt-2">
                 Here's how your resume matches the job description
               </p>
@@ -179,7 +193,7 @@ const Index = () => {
           </section>
         )}
       </main>
-      
+
       <Footer />
     </div>
   );
